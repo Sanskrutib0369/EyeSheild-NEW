@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EyeShield</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Federo&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Revalia&family=Roboto+Slab:wght@100..900&family=Smythe&family=Tektur:wght@400..900&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--background);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Hero section styles */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ffffff;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-family: "Roboto Slab", serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            font-family: "Nunito", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            background-color: var(--primary-red);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-family: "EB Garamond", serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-weight: bold;
+        }
+
+        .cta-button:hover {
+            color: white;
+            background-color: transparent;
+            border-color: var(--primary-red);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.3);
+        }
+
+        :root {
+            --primary-red: #e40046;
+            --black: #000000;
+            --white: #ffffff;
+            --background-rgb: 255, 255, 255;
+            --background: #ffffff;
+            --text: #000000;
+            --nav-bg: #ffffff;
+            --nav-text: #000000;
+            --card-bg: #ffffff;
+            --card-shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --background: #000000;
+            --text: #ffffff;
+            --nav-bg: #ffffff;
+            --nav-text: #000000;
+            --card-bg: #1a1a1a;
+            --card-shadow: rgba(255, 255, 255, 0.1);
+            --filter-btn-text: #ffffff;
+            --modal-bg: rgba(0, 0, 0, 0.9);
+            --modal-content-bg: #1a1a1a;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--nav-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            color: var(--primary-red);
+        }
+
+        .theme-toggle i {
+            transition: transform 0.5s ease;
+        }
+
+        [data-theme="dark"] .theme-toggle .fa-sun {
+            display: inline-block;
+        }
+
+        [data-theme="dark"] .theme-toggle .fa-moon {
+            display: none;
+        }
+
+        .theme-toggle .fa-sun {
+            display: none;
+        }
+
+        .theme-toggle .fa-moon {
+            display: inline-block;
+        }
+
+        /* Header styles */
+        header {
+            background-color: var(--nav-bg);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(228, 0, 70, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 1.5rem;
+            color: #E40046;
+            font-family: "Revalia", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: var(--nav-text);
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+            font-family: "Tektur", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-red);
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .mobile-menu span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: var(--nav-text);
+            transition: all 0.3s ease;
+        }
+
+        @media screen and (max-width: 768px) {
+            .mobile-menu {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                height: 100vh;
+                background-color: var(--nav-bg);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: right 0.5s ease;
+                z-index: 999;
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .nav-link {
+                font-size: 1.4rem;
+                margin: 1rem 0;
+                color: var(--nav-text);
+            }
+
+            .mobile-menu.active span:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+
+            .mobile-menu.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .mobile-menu.active span:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+
+            .theme-toggle {
+                margin-top: 2rem;
+            }
+        }
+
+        /* About section styles */
+        .about-section {
+            background-color: var(--background);
+            padding: 4rem 2rem;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-content h2 {
+            color: var(--primary-red);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-family: "Tektur", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
+        }
+
+        .about-content p {
+            color: var(--text);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 50px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            font-size: 1.5rem;
+        }
+
+        .feature-text h4 {
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-text p {
+            color: var(--text);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 6rem;
+        }
+
+        /* Recipe Section Styles */
+        .recipe-section {
+            padding: 4rem 2rem;
+            background-color: var(--background);
+        }
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .recipe-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 320px;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.2);
+        }
+
+        .recipe-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--primary-red);
+        }
+
+        .recipe-card h3 {
+            color: var(--text);
+            font-size: 1.2rem;
+            margin: 1rem;
+            line-height: 1.3;
+            font-family: "Roboto Slab", serif;
+            font-optical-sizing: auto;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .recipe-card p {
+            color: #666;
+            font-size: 1rem;
+            margin: 0 1rem 1rem;
+            flex-grow: 1;
+            font-family: "EB Garamond", serif;
+            font-optical-sizing: auto;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .recipe-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border: 2px solid var(--primary-red);
+            border-radius: 25px;
+            background: transparent;
+            color: var(--filter-btn-text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-red);
+            color: var(--text);
+        }
+
+        /* Assessment Section Styles */
+        .assessment-section {
+            padding: 6rem 2rem;
+            background-color: var(--background);
+            position: relative;
+        }
+
+        .assessment-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary-red);
+            font-family: "Tektur", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
+        }
+
+        .assessment-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid var(--primary-red);
+            box-shadow: 0 5px 15px var(--card-shadow);
+        }
+
+        .assessment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(228, 0, 70, 0.2);
+        }
+
+        .assessment-icon {
+            font-size: 3.5rem;
+            color: var(--primary-red);
+            margin-bottom: 2rem;
+        }
+
+        .assessment-card h3 {
+            color: var(--primary-red);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-family: "Revalia", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            border: 2px solid black;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .assessment-card p {
+            color: var(--text);
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .assessment-card .cta-button {
+            display: inline-block;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.2rem;
+            background-color: var(--primary-red);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .assessment-card .cta-button:hover {
+            background-color: transparent;
+            border-color: var(--primary-red);
+            color: var(--text);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.3);
+        }
+
+        /* AI Chat Section Styles */
+        .ai-chat-section {
+            padding: 4rem 2rem;
+            background-color: var(--background);
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--card-shadow);
+            overflow: hidden;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .chat-header {
+            background-color: var(--primary-red);
+            color: var(--text);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 3px solid var(--background);
+            margin: -2rem -2rem 2rem -2rem;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-family: "Federo", sans-serif;
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        .chat-description {
+            margin: 2rem 0;
+            color: var(--text);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            font-family: "Nunito", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        .chatgpt-button {
+            display: inline-block;
+            background-color: var(--primary-red);
+            color: var(--text);
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            margin-top: 1rem;
+            font-family: "EB Garamond", serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-weight: bold;
+        }
+
+        .chatgpt-button:hover {
+            background-color: transparent;
+            border-color: var(--primary-red);
+            color: var(--primary-red);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.3);
+        }
+
+        .chatgpt-button i {
+            margin-right: 0.5rem;
+        }
+
+        /* Questionnaire Section Styles */
+        .questionnaire-section {
+            padding: 4rem 2rem;
+            background-color: var(--background);
+        }
+
+        .questionnaire-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .question-card {
+            display: none;
+            padding: 2rem;
+        }
+
+        .question-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            font-family: "EB Garamond", serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-btn {
+            padding: 1rem;
+            border: 2px solid var(--primary-red);
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 1rem;
+            font-family: "Roboto Slab", serif;
+            font-optical-sizing: auto;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .option-btn:hover {
+            background: var(--primary-red);
+            color: var(--text);
+            transform: translateX(10px);
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #ddd;
+            margin: 2rem 0;
+            border-radius: 2px;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--primary-red);
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .results-container {
+            display: none;
+            padding: 2rem;
+        }
+
+        .results-container.active {
+            display: block;
+        }
+
+        .suggestion-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--primary-red);
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-card.low-severity {
+            border-left-color: #4CAF50;
+        }
+
+        .suggestion-card.medium-severity {
+            border-left-color: #FFA726;
+        }
+
+        .suggestion-card.high-severity {
+            border-left-color: var(--primary-red);
+        }
+
+        .severity-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .low-severity .severity-indicator {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
+        .medium-severity .severity-indicator {
+            background: rgba(255, 167, 38, 0.1);
+            color: #FFA726;
+        }
+
+        .high-severity .severity-indicator {
+            background: rgba(228, 0, 70, 0.1);
+            color: var(--primary-red);
+        }
+
+        .suggestion-card h4 {
+            color: var(--primary-red);
+            margin-bottom: 1rem;
+        }
+
+        .suggestion-card p {
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .restart-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--primary-red);
+            color: var(--text);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.3);
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: var(--primary-red);
+            color: var(--text);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-tagline {
+            color: var(--text);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-copyright {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .footer-logo {
+            color: var(--text);
+            font-size: 1 rem;
+            display: block;
+            padding: 10px 10px 0px 10px;
+        }
+
+        /* Section headings */
+        section h2 {
+            text-align: center;
+            color: var(--primary-red);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-family: "Tektur", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
+        }
+
+        /* Recipe modal styles */
+        .recipe-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .recipe-modal-content {
+            background-color: var(--modal-content-bg);
+            margin: 5% auto;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 1.5rem;
+            top: 1rem;
+            font-size: 2rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-red);
+        }
+
+        .recipe-modal h3 {
+            color: var(--primary-red);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .recipe-details {
+            margin-bottom: 2rem;
+        }
+
+        .recipe-details h4 {
+            color: var(--text);
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .recipe-details ul,
+        .recipe-details ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .recipe-details li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+
+            .info-container,
+            .about-container {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        #EyeShield {
+            text-decoration: 2px solid #E40046 underline;
+        }
+
+        /* Updated first aid section styles */
+        .first-aid-section {
+            padding: 4rem 2rem;
+            background-color: var(--background);
+            color: var(--text);
+        }
+
+        .first-aid-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .accordion-container {
+            width: 100%;
+        }
+
+        .accordion-item {
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 8px var(--card-shadow);
+        }
+
+        .accordion-header {
+            background: rgba(228, 0, 70, 0.5);
+            color: var(--text);
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background-color: var(--primary-red);
+            color: #ffffff;
+        }
+
+        .accordion-header i {
+            font-size: 1.2rem;
+        }
+
+        .accordion-content {
+            background-color: var(--card-bg);
+            color: var(--text);
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-content.active {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        .accordion-content ul {
+            list-style-type: none;
+            padding-left: 2rem;
+        }
+
+        .accordion-content li {
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .accordion-content li:before {
+            content: "•";
+            color: var(--primary-red);
+            font-weight: bold;
+            position: absolute;
+            left: -1.5rem;
+        }
+
+        .accordion-header h3 {
+            font-family: "Federo", sans-serif;
+            font-style: normal;
+            font-size: 1.5rem;
+        }
+
+        .accordion-content.active h4,
+        p {
+            font-family: "Nunito", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-weight: 600
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="#" class="logo">
+                <i class="fas fa-eye"></i>
+                EyeShield
+            </a>
+            <div class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#recipes" class="nav-link">Recipes</a></li>
+                <li><a href="#ai-chat" class="nav-link">AI Chat</a></li>
+                <li><a href="#questionnaire" class="nav-link">Assessment</a></li>
+                <li><a href="#first-aid" class="nav-link">First Aid</a></li>
+                <li><a href="eye-exercises.html" class="nav-link">Eye Exercises</a></li>
+                <button class="theme-toggle">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </button>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-slide" style="background-image: url('bg1.jpg')"></div>
+            <div class="hero-slide" style="background-image: url('bg2.avif')"></div>
+            <div class="hero-slide" style="background-image: url('bg3.png')"></div>
+            <div class="hero-slide" style="background-image: url('bg4.jpg')"></div>
+            <div class="hero-content">
+                <h1>Take Control of Your Eye Health</h1>
+                <p>Professional vision tests and personalized eye care recommendations at your fingertips.</p>
+                <a href="#tests" class="cta-button">Start Virtual Checkup</a>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <div class="about-container">
+                <div class="about-content">
+                    <h2>About EyeShield</h2>
+                    <p>We're dedicated to making professional eye care accessible to everyone. Our platform combines
+                        cutting-edge technology with expert knowledge to provide you with comprehensive vision
+                        assessments and personalized recommendations.</p>
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Vision Tests</h4>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>AI Analysis</h4>
+
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Nutrition Guide</h4>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>24/7 Support</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="bg5.avif" alt="Modern eye examination">
+                </div>
+            </div>
+        </section>
+
+        <section id="tests" class="assessment-section">
+            <h2>Virtual Eye Checkup</h2>
+            <div class="assessment-card">
+                <div class="assessment-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>Comprehensive Vision Assessment</h3>
+                <p>Take our professional-grade vision tests from the comfort of your home. Our virtual checkup includes
+                    visual acuity, color vision, astigmatism, contrast sensitivity, night vision, and near vision tests
+                    to give you a complete understanding of your eye health.</p>
+                <a href="virtual-checkup.html" class="cta-button">Start Virtual Checkup</a>
+            </div>
+        </section>
+
+        <section id="recipes" class="recipe-section">
+            <h2>Eye-Healthy Recipes</h2>
+            <!-- <div class="recipe-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="breakfast">Breakfast</button>
+                <button class="filter-btn" data-filter="lunch">Lunch</button>
+                <button class="filter-btn" data-filter="dinner">Dinner</button>
+                <button class="filter-btn" data-filter="snacks">Snacks</button>
+            </div> -->
+            <div class="recipe-grid">
+                <div class="recipe-card" data-category="breakfast" onclick="showRecipe('smoothie')">
+                    <img src="R1.avif" alt="Berry-Carrot Smoothie">
+                    <h3>Berry-Carrot Vision Smoothie</h3>
+                    <p>Rich in vitamins A and C for eye health</p>
+                </div>
+                <div class="recipe-card" data-category="lunch" onclick="showRecipe('salad')">
+                    <img src="R2.avif" alt="Spinach Salad">
+                    <h3>Spinach Salmon Salad</h3>
+                    <p>Packed with omega-3 and lutein</p>
+                </div>
+                <div class="recipe-card" data-category="dinner" onclick="showRecipe('fish')">
+                    <img src="R3.avif" alt="Grilled Fish">
+                    <h3>Herb-Grilled Fish</h3>
+                    <p>Essential fatty acids for eye health</p>
+                </div>
+                <div class="recipe-card" data-category="snacks" onclick="showRecipe('nuts')">
+                    <img src="R4.avif" alt="Mixed Nuts">
+                    <h3>Vision-Boost Trail Mix</h3>
+                    <p>Vitamin E and zinc-rich snack</p>
+                </div>
+                <div class="recipe-card" data-category="snacks" onclick="showRecipe('berryParfait')">
+                    <img src="R5.avif" alt="Berry Parfait">
+                    <h3>Antioxidant Berry Parfait</h3>
+                    <p>Rich in antioxidants and omega-3s</p>
+                </div>
+                <div class="recipe-card" data-category="lunch" onclick="showRecipe('fishTacos')">
+                    <img src="R6.avif" alt="Fish Tacos">
+                    <h3>Omega-3 Fish Tacos</h3>
+                    <p>High in omega-3s and antioxidants</p>
+                </div>
+                <div class="recipe-card" data-category="breakfast" onclick="showRecipe('quinoaBowl')">
+                    <img src="R7.avif" alt="Quinoa Power Bowl">
+                    <h3>Quinoa Power Bowl</h3>
+                    <p>Rich in zinc and vitamin A</p>
+                </div>
+                <div class="recipe-card" data-category="dinner" onclick="showRecipe('zucchiniPasta')">
+                    <img src="R8.avif" alt="Zucchini Pasta">
+                    <h3>Zucchini Pasta with Pesto</h3>
+                    <p>Packed with lutein and zeaxanthin</p>
+                </div>
+            </div>
+
+            <!-- Recipe Modals -->
+            <div id="recipe-modal" class="recipe-modal">
+                <div class="recipe-modal-content">
+                    <span class="close-modal" onclick="closeRecipe()">&times;</span>
+                    <div id="recipe-content"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ai-chat" class="ai-chat-section">
+            <h2>AI Eye Health Assistant</h2>
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3><i class="fas fa-robot"></i> EyeShield AI Assistant</h3>
+                </div>
+                <p class="chat-description">
+                    Get instant answers to your eye health questions from ChatGPT, powered by OpenAI.
+                    Our AI assistant can provide general information about eye care, vision health, and lifestyle
+                    recommendations.
+                    <br><br>
+                    <strong>Note :</strong> For specific medical advice, please consult with an eye care professional.
+                </p>
+                <a href="https://chat.openai.com" target="_blank" rel="noopener noreferrer" class="chatgpt-button">
+                    <i class="fas fa-comments"></i> Chat with AI Assistant
+                </a>
+            </div>
+        </section>
+
+        <section id="questionnaire" class="questionnaire-section">
+            <h2>Eye Health Assessment</h2>
+            <div class="questionnaire-container">
+                <div id="questionCards"></div>
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+                <div id="results" class="results-container">
+                    <h3>Your Eye Health Suggestions</h3>
+                    <div id="suggestions"></div>
+                    <button class="restart-btn" onclick="restartQuestionnaire()">Take Assessment Again</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="first-aid" class="first-aid-section">
+            <h2>Eye Care First Aid</h2>
+            <div class="first-aid-grid">
+                <div class="accordion-container">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <i class="fas fa-eye"></i>
+                            <h3>Eye Redness & Irritation</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="quick-tips">
+                                    <div class="tip-item">
+                                        <i class="fas fa-compress-alt"></i>
+                                        <div class="tip-content">
+                                            <h4>Cold Compress</h4>
+                                            <p>Apply a clean, cold compress for 10 minutes to reduce inflammation</p>
+                                        </div>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-tint"></i>
+                                        <div class="tip-content">
+                                            <h4>Artificial Tears</h4>
+                                            <p>Use preservative-free artificial tears to soothe irritation</p>
+                                        </div>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-hand-paper"></i>
+                                        <div class="tip-content">
+                                            <h4>Avoid Rubbing</h4>
+                                            <p>Resist rubbing your eyes as it may worsen the irritation</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <i class="fas fa-wind"></i>
+                            <h3>Dry Eyes</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="quick-tips">
+                                    <div class="tip-item">
+                                        <i class="fas fa-cloud"></i>
+                                        <div class="tip-content">
+                                            <h4>Use Humidifier</h4>
+                                            <p>Add moisture to the air with a humidifier in your room</p>
+                                        </div>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-eye"></i>
+                                        <div class="tip-content">
+                                            <h4>Blink Exercises</h4>
+                                            <p>Practice complete blinks every 20 minutes while working</p>
+                                        </div>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-prescription-bottle"></i>
+                                        <div class="tip-content">
+                                            <h4>Lubricating Drops</h4>
+                                            <p>Apply artificial tears or lubricating eye drops as needed</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Foreign Object in Eye</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="quick-tips">
+                                    <div class="tip-item">
+                                        <i class="fas fa-ban"></i>
+                                        <div class="tip-content">
+                                            <h4>Don't Rub</h4>
+                                            <p>Avoid rubbing your eye as it may cause scratches</p>
+                                        </div>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-shower"></i>
+                                        <div class="tip-content">
+                                            <h4>Flush with Water</h4>
+                                            <p>Gently flush your eye with clean water for several minutes</p>
+                                        </div>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-user-md"></i>
+                                        <div class="tip-content">
+                                            <h4>Seek Help</h4>
+                                            <p>If object persists, seek immediate medical attention</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <i class="fas fa-laptop"></i>
+                            <h3>Digital Eye Strain</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <div class="quick-tips">
+                                    <div class="tip-item">
+                                        <i class="fas fa-clock"></i>
+                                        <div class="tip-content">
+                                            <h4>20-20-20 Rule</h4>
+                                            <p>Every 20 minutes, look 20 feet away for 20 seconds</p>
+                                        </div>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-adjust"></i>
+                                        <div class="tip-content">
+                                            <h4>Screen Settings</h4>
+                                            <p>Adjust brightness and contrast for comfortable viewing</p>
+                                        </div>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-chair"></i>
+                                        <div class="tip-content">
+                                            <h4>Proper Position</h4>
+                                            <p>Keep screen at arm's length and slightly below eye level</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <span class="footer-logo">
+                <i class="fas fa-eye"></i> EyeShield
+            </span>
+            <p class="footer-copyright">&copy; 2025 EyeShield. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Recipe filtering functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const recipeCards = document.querySelectorAll('.recipe-card');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+
+                const filter = button.getAttribute('data-filter');
+
+                recipeCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Hero section image slider
+        document.addEventListener('DOMContentLoaded', function () {
+            const slides = document.querySelectorAll('.hero-slide');
+            let currentSlide = 0;
+
+            // Show first slide initially
+            slides[0].classList.add('active');
+
+            // Change slide every 6 seconds
+            setInterval(() => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, 6000);
+        });
+
+        // Recipe modal functionality
+        const recipes = {
+            smoothie: {
+                title: "Berry-Carrot Vision Smoothie",
+                ingredients: [
+                    "1 cup mixed berries (blueberries, strawberries)",
+                    "1 medium carrot, chopped",
+                    "1 banana",
+                    "1 cup spinach",
+                    "1 cup almond milk",
+                    "1 tablespoon chia seeds",
+                    "1 tablespoon honey (optional)"
+                ],
+                instructions: [
+                    "Wash all fruits and vegetables thoroughly",
+                    "Chop the carrot into small pieces",
+                    "Add all ingredients to a blender",
+                    "Blend until smooth and creamy",
+                    "Add more almond milk if needed for desired consistency",
+                    "Serve immediately for maximum nutrient benefits"
+                ],
+                benefits: [
+                    "Vitamin A from carrots supports night vision",
+                    "Antioxidants from berries protect retinal cells",
+                    "Omega-3 from chia seeds supports eye health",
+                    "Lutein from spinach helps prevent age-related eye conditions"
+                ]
+            },
+            salad: {
+                title: "Spinach Salmon Salad",
+                ingredients: [
+                    "2 cups fresh spinach leaves",
+                    "4 oz grilled salmon",
+                    "1/2 cup cherry tomatoes",
+                    "1/4 cup sliced almonds",
+                    "1/4 red onion, thinly sliced",
+                    "Olive oil and lemon dressing"
+                ],
+                instructions: [
+                    "Wash and dry spinach leaves",
+                    "Grill salmon with light seasoning",
+                    "Halve the cherry tomatoes",
+                    "Combine all ingredients in a large bowl",
+                    "Drizzle with olive oil and lemon juice",
+                    "Toss gently and serve immediately"
+                ],
+                benefits: [
+                    "Omega-3 fatty acids from salmon support retinal function",
+                    "Lutein and zeaxanthin from spinach protect against UV damage",
+                    "Vitamin E from almonds reduces risk of age-related vision problems",
+                    "Vitamin C from tomatoes supports overall eye health"
+                ]
+            },
+            fish: {
+                title: "Herb-Grilled Fish",
+                ingredients: [
+                    "6 oz white fish fillet",
+                    "2 tablespoons fresh herbs (basil, parsley, dill)",
+                    "1 lemon",
+                    "2 tablespoons olive oil",
+                    "2 cloves garlic, minced",
+                    "Salt and pepper to taste"
+                ],
+                instructions: [
+                    "Mix herbs, garlic, and olive oil to make marinade",
+                    "Season fish with salt and pepper",
+                    "Coat fish with herb marinade",
+                    "Preheat grill to medium-high heat",
+                    "Grill fish for 4-5 minutes per side",
+                    "Squeeze fresh lemon juice before serving"
+                ],
+                benefits: [
+                    "Essential fatty acids support overall eye health",
+                    "Omega-3 helps prevent dry eyes",
+                    "Protein supports eye tissue repair",
+                    "Antioxidants from herbs protect against eye damage"
+                ]
+            },
+            nuts: {
+                title: "Vision-Boost Trail Mix",
+                ingredients: [
+                    "1/2 cup almonds",
+                    "1/2 cup walnuts",
+                    "1/4 cup pumpkin seeds",
+                    "1/4 cup dried goji berries",
+                    "1/4 cup dried blueberries",
+                    "2 tablespoons dark chocolate chips"
+                ],
+                instructions: [
+                    "Combine all nuts and seeds in a bowl",
+                    "Add dried fruits and chocolate chips",
+                    "Mix well to combine all ingredients",
+                    "Store in an airtight container",
+                    "Portion into 1/4 cup servings",
+                    "Enjoy as a daily eye-healthy snack"
+                ],
+                benefits: [
+                    "Vitamin E from nuts protects eye cells",
+                    "Zinc from pumpkin seeds supports retinal health",
+                    "Antioxidants from berries reduce inflammation",
+                    "Dark chocolate flavonoids improve blood flow to eyes"
+                ]
+            },
+            quinoaBowl: {
+                title: "Quinoa Power Bowl",
+                ingredients: [
+                    "1 cup cooked quinoa",
+                    "1 cup mixed greens",
+                    "1/2 cup cherry tomatoes",
+                    "1/4 cup sliced avocado",
+                    "1/4 cup chopped walnuts",
+                    "2 tablespoons olive oil",
+                    "1 tablespoon lemon juice"
+                ],
+                instructions: [
+                    "Cook quinoa according to package instructions",
+                    "Combine mixed greens, cherry tomatoes, and sliced avocado in a bowl",
+                    "Top with cooked quinoa and chopped walnuts",
+                    "Drizzle with olive oil and lemon juice",
+                    "Serve immediately and enjoy"
+                ],
+                benefits: [
+                    "Quinoa provides all essential amino acids for eye health",
+                    "Vitamin A from mixed greens supports night vision",
+                    "Antioxidants from cherry tomatoes protect retinal cells",
+                    "Healthy fats from avocado support eye health"
+                ]
+            },
+            fishTacos: {
+                title: "Omega-3 Fish Tacos",
+                ingredients: [
+                    "6 oz white fish fillet",
+                    "1/2 cup chopped cilantro",
+                    "1/4 cup chopped red onion",
+                    "1 jalapeño pepper, sliced",
+                    "2 tablespoons olive oil",
+                    "2 corn tortillas",
+                    "Salt and pepper to taste"
+                ],
+                instructions: [
+                    "Grill or bake fish with light seasoning",
+                    "Chop cilantro, red onion, and jalapeño pepper",
+                    "Warm corn tortillas by wrapping in a damp paper towel and microwaving for 20-30 seconds",
+                    "Assemble tacos with grilled fish, chopped cilantro, red onion, and jalapeño pepper",
+                    "Drizzle with olive oil and serve immediately"
+                ],
+                benefits: [
+                    "Omega-3 fatty acids from fish support retinal function",
+                    "Vitamin C from cilantro supports overall eye health",
+                    "Antioxidants from jalapeño pepper protect against eye damage"
+                ]
+            },
+            zucchiniPasta: {
+                title: "Zucchini Pasta with Pesto",
+                ingredients: [
+                    "1 medium zucchini",
+                    "1 cup cooked pasta",
+                    "1/4 cup pesto sauce",
+                    "1/4 cup grated parmesan cheese",
+                    "1/4 cup chopped fresh basil",
+                    "Salt and pepper to taste"
+                ],
+                instructions: [
+                    "Spiralize zucchini into noodle-like strands",
+                    "Cook pasta according to package instructions",
+                    "Combine cooked pasta, zucchini noodles, and pesto sauce in a bowl",
+                    "Top with grated parmesan cheese and chopped fresh basil",
+                    "Serve immediately and enjoy"
+                ],
+                benefits: [
+                    "Lutein and zeaxanthin from zucchini protect against UV damage",
+                    "Vitamin A from basil supports night vision",
+                    "Antioxidants from pesto sauce protect against eye damage"
+                ]
+            },
+            berryParfait: {
+                title: "Antioxidant Berry Parfait",
+                ingredients: [
+                    "1 cup mixed berries (blueberries, strawberries, raspberries)",
+                    "1 cup Greek yogurt",
+                    "1/4 cup granola",
+                    "1 tablespoon honey",
+                    "1/4 cup chopped fresh mint"
+                ],
+                instructions: [
+                    "Layer mixed berries, Greek yogurt, and granola in a bowl",
+                    "Drizzle with honey and top with chopped fresh mint",
+                    "Serve immediately and enjoy"
+                ],
+                benefits: [
+                    "Antioxidants from berries reduce inflammation",
+                    "Vitamin C from Greek yogurt supports overall eye health",
+                    "Fiber from granola supports healthy digestion"
+                ]
+            }
+        };
+
+        function showRecipe(recipeId) {
+            const recipe = recipes[recipeId];
+            const modal = document.getElementById('recipe-modal');
+            const content = document.getElementById('recipe-content');
+
+            content.innerHTML = `
+                <h3>${recipe.title}</h3>
+                <div class="recipe-details">
+                    <h4>Ingredients</h4>
+                    <ul>
+                        ${recipe.ingredients.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    
+                    <h4>Instructions</h4>
+                    <ol>
+                        ${recipe.instructions.map(item => `<li>${item}</li>`).join('')}
+                    </ol>
+                    
+                    <h4>Health Benefits</h4>
+                    <ul>
+                        ${recipe.benefits.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRecipe() {
+            const modal = document.getElementById('recipe-modal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const modal = document.getElementById('recipe-modal');
+            if (event.target == modal) {
+                closeRecipe();
+            }
+        }
+
+        // Theme toggle functionality
+        const themeToggle = document.querySelector('.theme-toggle');
+        const root = document.documentElement;
+
+        function toggleTheme() {
+            const currentTheme = root.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+
+            // Update theme toggle icon
+            const sunIcon = themeToggle.querySelector('.fa-sun');
+            const moonIcon = themeToggle.querySelector('.fa-moon');
+            if (newTheme === 'dark') {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        }
+
+        // Set initial theme from localStorage
+        document.addEventListener('DOMContentLoaded', function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            root.setAttribute('data-theme', savedTheme);
+
+            // Set initial icon state
+            const sunIcon = themeToggle.querySelector('.fa-sun');
+            const moonIcon = themeToggle.querySelector('.fa-moon');
+            if (savedTheme === 'dark') {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        });
+
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const navMenu = document.querySelector('.nav-menu');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            mobileMenu.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+        });
+
+        // Questionnaire functionality
+        const questionBank = [
+            {
+                question: "How many hours do you spend looking at digital screens daily?",
+                options: [
+                    "Less than 2 hours",
+                    "2-4 hours",
+                    "4-8 hours",
+                    "More than 8 hours"
+                ],
+                weights: {
+                    screenTime: [0, 1, 2, 3],
+                    eyeStrain: [0, 1, 2, 3]
+                }
+            },
+            {
+                question: "Do you experience frequent headaches while working?",
+                options: [
+                    "Never",
+                    "Rarely",
+                    "Sometimes",
+                    "Often"
+                ],
+                weights: {
+                    eyeStrain: [0, 1, 2, 3],
+                    consultation: [0, 1, 2, 3]
+                }
+            },
+            {
+                question: "How often do you take breaks while working on screens?",
+                options: [
+                    "Every 20-30 minutes",
+                    "Every hour",
+                    "Every few hours",
+                    "Rarely take breaks"
+                ],
+                weights: {
+                    screenTime: [0, 1, 2, 3],
+                    exercises: [0, 1, 2, 3]
+                }
+            },
+            {
+                question: "Do you notice blurred vision after long periods of close work?",
+                options: [
+                    "Never",
+                    "Occasionally",
+                    "Frequently",
+                    "Almost always"
+                ],
+                weights: {
+                    consultation: [0, 1, 2, 3],
+                    exercises: [0, 1, 2, 3]
+                }
+            },
+            {
+                question: "How would you rate your daily water intake?",
+                options: [
+                    "8+ glasses daily",
+                    "6-8 glasses daily",
+                    "4-6 glasses daily",
+                    "Less than 4 glasses"
+                ],
+                weights: {
+                    nutrition: [0, 1, 2, 3],
+                    lifestyle: [0, 1, 2, 3]
+                }
+            },
+            {
+                question: "Do your eyes feel dry or irritated during the day?",
+                options: [
+                    "Never",
+                    "Sometimes",
+                    "Often",
+                    "Very often"
+                ],
+                weights: {
+                    dryEyes: [0, 1, 2, 3],
+                    consultation: [0, 1, 2, 3]
+                }
+            },
+            {
+                question: "How often do you eat foods rich in vitamins A, C, and E?",
+                options: [
+                    "Daily",
+                    "Few times a week",
+                    "Occasionally",
+                    "Rarely"
+                ],
+                weights: {
+                    nutrition: [0, 1, 2, 3],
+                    lifestyle: [0, 1, 2, 3]
+                }
+            },
+            {
+                question: "When was your last eye examination?",
+                options: [
+                    "Within 6 months",
+                    "Within 1 year",
+                    "1-2 years ago",
+                    "More than 2 years"
+                ],
+                weights: {
+                    consultation: [0, 1, 2, 3],
+                    lifestyle: [0, 1, 2, 3]
+                }
+            }
+        ];
+
+        window.suggestions = {
+            screenTime: {
+                low: {
+                    title: "Maintain Good Screen Habits",
+                    text: "You're managing your screen time well! To maintain eye health, continue using the 20-20-20 rule and ensure proper screen distance."
+                },
+                medium: {
+                    title: "Screen Time Management",
+                    text: "Consider reducing your daily screen time. Use the 20-20-20 rule: every 20 minutes, look at something 20 feet away for 20 seconds. Install a blue light filter on your devices."
+                },
+                high: {
+                    title: "Urgent Screen Time Reduction",
+                    text: "Your screen time is significantly high. Implement strict breaks, use screen time tracking apps, and consider ergonomic adjustments to your workspace. Schedule regular outdoor activities."
+                }
+            },
+            eyeStrain: {
+                low: {
+                    title: "Preventive Eye Care",
+                    text: "Your eyes are handling work well. Continue good practices like proper lighting and regular blinking exercises."
+                },
+                medium: {
+                    title: "Eye Strain Management",
+                    text: "You're showing signs of eye strain. Try palming exercises, adjust screen brightness, and ensure proper room lighting. Consider using artificial tears."
+                },
+                high: {
+                    title: "Severe Eye Strain Relief",
+                    text: "Your eyes need immediate attention. Take frequent breaks, do eye relaxation exercises, and consult a professional for medicated eye drops."
+                }
+            },
+            consultation: {
+                low: {
+                    title: "Regular Check-ups",
+                    text: "Keep up with your regular eye check-ups. Schedule your next routine examination in 6-12 months."
+                },
+                medium: {
+                    title: "Professional Consultation Recommended",
+                    text: "Consider scheduling an eye examination soon. Your symptoms suggest you might benefit from professional advice and possible vision correction."
+                },
+                high: {
+                    title: "Urgent Professional Care",
+                    text: "Please schedule an eye examination as soon as possible. Your symptoms indicate a need for immediate professional assessment and personalized care plan."
+                }
+            },
+            exercises: {
+                low: {
+                    title: "Maintain Eye Fitness",
+                    text: "Your eyes are getting good exercise. Continue with basic eye movements and focusing exercises to maintain eye muscle strength."
+                },
+                medium: {
+                    title: "Enhanced Eye Exercises",
+                    text: "Incorporate more eye exercises into your routine. Try figure-eight movements, focus shifting, and eye rolling exercises 2-3 times daily."
+                },
+                high: {
+                    title: "Intensive Eye Exercise Program",
+                    text: "Your eyes need regular exercise. Follow our comprehensive eye exercise program including tracking, focusing, and strengthening exercises multiple times daily."
+                }
+            },
+            nutrition: {
+                low: {
+                    title: "Maintain Healthy Diet",
+                    text: "Your diet supports eye health well. Continue eating foods rich in vitamins A, C, E, and omega-3 fatty acids."
+                },
+                medium: {
+                    title: "Dietary Improvements",
+                    text: "Add more eye-healthy foods to your diet: leafy greens, fish, eggs, nuts, and colorful fruits. Consider vitamin supplements after consulting a professional."
+                },
+                high: {
+                    title: "Nutrition Intervention",
+                    text: "Your eyes need better nutritional support. Prioritize foods rich in lutein, zeaxanthin, and omega-3s. Consider professional nutritional guidance for eye health."
+                }
+            },
+            lifestyle: {
+                low: {
+                    title: "Healthy Lifestyle Maintenance",
+                    text: "Your lifestyle supports good eye health. Maintain regular sleep patterns and outdoor activities."
+                },
+                medium: {
+                    title: "Lifestyle Adjustments",
+                    text: "Make moderate changes to your routine: increase outdoor time, improve sleep habits, and maintain good posture while working."
+                },
+                high: {
+                    title: "Major Lifestyle Changes",
+                    text: "Your lifestyle needs significant adjustments. Prioritize sleep hygiene, increase outdoor activities, and restructure your work environment for better eye health."
+                }
+            },
+            dryEyes: {
+                low: {
+                    title: "Dry Eye Prevention",
+                    text: "Your eyes show minimal dryness. Maintain good humidity levels and regular blinking practices."
+                },
+                medium: {
+                    title: "Dry Eye Management",
+                    text: "Use preservative-free artificial tears, maintain room humidity, and take regular breaks. Avoid rubbing your eyes."
+                },
+                high: {
+                    title: "Severe Dry Eye Care",
+                    text: "Your eyes need intensive moisture care. Use frequent artificial tears, consider using a humidifier, and consult a professional for medicated eye drops."
+                }
+            }
+        };
+
+        function getSeverityLevel(score) {
+            if (score <= 3) return 'low';
+            if (score <= 5) return 'medium';
+            return 'high';
+        }
+
+        let currentQuestion = 0;
+        let scores = {
+            screenTime: 0,
+            eyeStrain: 0,
+            consultation: 0,
+            exercises: 0,
+            nutrition: 0,
+            lifestyle: 0,
+            dryEyes: 0
+        };
+
+        function shuffleQuestions() {
+            for (let i = questionBank.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questionBank[i], questionBank[j]] = [questionBank[j], questionBank[i]];
+            }
+        }
+
+        function displayQuestion() {
+            const questionCards = document.getElementById('questionCards');
+            const progressBar = document.getElementById('progressBar');
+
+            if (currentQuestion < questionBank.length) {
+                const q = questionBank[currentQuestion];
+                const progress = ((currentQuestion + 1) / questionBank.length) * 100;
+
+                questionCards.innerHTML = `
+                    <div class="question-card active">
+                        <div class="question-text">${q.question}</div>
+                        <div class="options-container">
+                            ${q.options.map((option, index) => `
+                                <button class="option-btn" onclick="selectOption(${index})">${option}</button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                progressBar.style.width = `${progress}%`;
+            } else {
+                showResults();
+            }
+        }
+
+        function selectOption(optionIndex) {
+            const question = questionBank[currentQuestion];
+
+            // Update scores based on weights
+            Object.keys(question.weights).forEach(category => {
+                scores[category] += question.weights[category][optionIndex];
+            });
+
+            currentQuestion++;
+            displayQuestion();
+        }
+
+        function showResults() {
+            const resultsDiv = document.getElementById('results');
+            const suggestionsDiv = document.getElementById('suggestions');
+            const questionCards = document.getElementById('questionCards');
+
+            questionCards.style.display = 'none';
+            resultsDiv.classList.add('active');
+
+            // Calculate severity for each category
+            const categorySeverity = {};
+            Object.entries(scores).forEach(([category, score]) => {
+                categorySeverity[category] = {
+                    score: score,
+                    severity: getSeverityLevel(score)
+                };
+            });
+
+            // Get top 3 concerns based on score
+            const sortedScores = Object.entries(scores)
+                .sort(([, a], [, b]) => b - a)
+                .slice(0, 3);
+
+            // Generate personalized suggestions
+            suggestionsDiv.innerHTML = sortedScores.map(([category, score]) => {
+                const severity = categorySeverity[category].severity;
+                const suggestion = window.suggestions[category][severity];
+
+                return `
+                    <div class="suggestion-card ${severity}-severity">
+                        <h4>${suggestion.title}</h4>
+                        <p>${suggestion.text}</p>
+                        <div class="severity-indicator">Priority: ${severity.charAt(0).toUpperCase() + severity.slice(1)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function restartQuestionnaire() {
+            currentQuestion = 0;
+            scores = {
+                screenTime: 0,
+                eyeStrain: 0,
+                consultation: 0,
+                exercises: 0,
+                nutrition: 0,
+                lifestyle: 0,
+                dryEyes: 0
+            };
+
+            const resultsDiv = document.getElementById('results');
+            const questionCards = document.getElementById('questionCards');
+
+            resultsDiv.classList.remove('active');
+            questionCards.style.display = 'block';
+
+            shuffleQuestions();
+            displayQuestion();
+        }
+
+        // Initialize questionnaire
+        document.addEventListener('DOMContentLoaded', function () {
+            shuffleQuestions();
+            displayQuestion();
+        });
+
+        // Add FAQ functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const toggle = question.querySelector('.toggle');
+
+                answer.classList.toggle('active');
+                toggle.textContent = answer.classList.contains('active') ? '-' : '+';
+            });
+        });
+
+        // Add accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const chevron = header.querySelector('.fa-chevron-down');
+
+                // Close all other accordion items
+                document.querySelectorAll('.accordion-content').forEach(item => {
+                    if (item !== content) {
+                        item.classList.remove('active');
+                        item.previousElementSibling.querySelector('.fa-chevron-down').style.transform = 'rotate(0deg)';
+                    }
+                });
+
+                // Toggle current accordion item
+                content.classList.toggle('active');
+                chevron.style.transform = content.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+            });
+        });
+    </script>
+</body>
+
+</html>

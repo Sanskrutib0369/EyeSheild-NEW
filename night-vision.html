@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Night Vision Test - EyeShield</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #E40046;
+            --black: #000000;
+            --white: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --card-border: rgba(228, 0, 70, 0.1);
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --gradient-start: rgba(228, 0, 70, 0.15);
+            --gradient-end: transparent;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 100% 0%, var(--gradient-start) 0%, var(--gradient-end) 50%),
+                radial-gradient(circle at 0% 100%, var(--gradient-start) 0%, var(--gradient-end) 50%);
+            background-attachment: fixed;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-red);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-red), transparent);
+        }
+
+        .setup-instructions {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            margin: 3rem auto;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            position: relative;
+            box-shadow: 
+                0 10px 30px var(--card-shadow),
+                inset 0 0 0 1px rgba(228, 0, 70, 0.05);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .setup-instructions::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), transparent);
+        }
+
+        .setup-instructions h2 {
+            color: var(--primary-red);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .setup-instructions ol {
+            text-align: left;
+            margin-left: 2rem;
+            margin-top: 1rem;
+        }
+
+        .setup-instructions li {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            padding-left: 0.5rem;
+        }
+
+        .setup-instructions li::marker {
+            color: var(--primary-red);
+            font-weight: bold;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary-red), #ff1a5c);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 
+                0 10px 20px rgba(228, 0, 70, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 30px rgba(228, 0, 70, 0.3),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover i {
+            transform: scale(1.1);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 15px rgba(228, 0, 70, 0.2);
+        }
+
+        .btn.outline {
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            box-shadow: none;
+        }
+
+        .night-scene {
+            width: 100%;
+            height: 400px;
+            background-color: var(--black);
+            position: relative;
+            border-radius: 20px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .target {
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .target.visible {
+            opacity: 1;
+        }
+
+        .adaptation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .countdown {
+            color: var(--white);
+            font-size: 4rem;
+            font-weight: bold;
+        }
+
+        .test-area {
+            display: none;
+        }
+
+        #resultsArea {
+            display: none;
+        }
+
+        .brightness-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .brightness-slider {
+            width: 200px;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(to right, var(--black), var(--white));
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .brightness-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .brightness-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .score-display {
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            color: var(--white);
+        }
+
+        .btn.outline:hover {
+            background: rgba(228, 0, 70, 0.1);
+            box-shadow: 0 8px 20px rgba(228, 0, 70, 0.2);
+        }
+
+        .test-area {
+            display: none;
+            margin: 3rem auto;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 
+                0 10px 30px var(--card-shadow),
+                inset 0 0 0 1px rgba(228, 0, 70, 0.05);
+            backdrop-filter: blur(10px);
+            position: relative;
+            animation: fadeScale 0.5s ease-out;
+        }
+
+        @keyframes fadeScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .test-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-red);
+            border-radius: 15px 0 0 15px;
+        }
+
+        .symbol-display {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(228, 0, 70, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .symbol-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(228, 0, 70, 0.15);
+        }
+
+        #nightScene {
+            background: var(--black);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 30px var(--card-shadow),
+                inset 0 0 0 1px rgba(228, 0, 70, 0.05);
+        }
+
+        #nightScene:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 15px 40px rgba(228, 0, 70, 0.2),
+                inset 0 0 0 1px rgba(228, 0, 70, 0.1);
+        }
+
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            color: var(--white);
+            border-radius: 15px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: none;
+        }
+
+        .option-btn:hover {
+            background: rgba(228, 0, 70, 0.1);
+            box-shadow: 0 8px 20px rgba(228, 0, 70, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .option-btn {
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            color: var(--white);
+            border-radius: 15px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: none;
+            margin: 0.5rem;
+            min-width: 120px;
+        }
+
+        .option-btn:hover {
+            background: rgba(228, 0, 70, 0.1);
+            box-shadow: 0 8px 20px rgba(228, 0, 70, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .option-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(228, 0, 70, 0.1);
+        }
+
+        .home-icon {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+            position: absolute;
+            left: 2rem;
+            top: 2rem;
+        }
+
+        .home-icon:hover {
+            color: var(--primary-red);
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--card-border);
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: var(--primary-red);
+        }
+
+        .back-button i {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .setup-instructions {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .home-icon {
+                left: 1rem;
+                top: 1rem;
+            }
+
+            .symbol-display {
+                padding: 1.5rem;
+            }
+
+            .option-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                min-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="nav-bar">
+            <a href="virtual-checkup.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Checkup</span>
+            </a>
+        </nav>
+
+        <div id="setupContainer" class="setup-container">
+            <h1>Night Vision Test</h1>
+            <div class="setup-instructions">
+                <h2>Test Instructions</h2>
+                <ol>
+                    <li>Find a dimly lit environment or reduce your screen brightness</li>
+                    <li>Position yourself at arm's length from the screen</li>
+                    <li>Click on the circles as they appear</li>
+                    <li>The circles will become harder to see over time</li>
+                    <li>You have 60 seconds to find as many circles as possible</li>
+                    <li>Use the brightness slider to adjust visibility if needed</li>
+                </ol>
+            </div>
+            <button class="btn" onclick="startTest()">
+                <i class="fas fa-play"></i>
+                Start Test
+            </button>
+        </div>
+
+        <div id="testArea" class="test-area">
+            <div class="night-scene" id="nightScene"></div>
+
+            <div class="controls">
+                <div class="brightness-control">
+                    <span><i class="fas fa-moon"></i></span>
+                    <input type="range" class="brightness-slider" id="brightnessSlider" min="10" max="100" value="50">
+                    <span><i class="fas fa-sun"></i></span>
+                </div>
+            </div>
+
+            <div class="score-display">
+                Score: <span id="currentScore">0</span>
+                <br>
+                Time Remaining: <span id="timeRemaining">60</span>s
+            </div>
+        </div>
+
+        <div id="resultsArea" class="results">
+            <h2>Test Results</h2>
+            <div class="score">Night Vision Score: <span id="finalScore">0</span></div>
+            
+            <div class="interpretation">
+                <p><strong>Score Interpretation:</strong></p>
+                <p>90-100: Excellent night vision</p>
+                <p>70-89: Good night vision</p>
+                <p>50-69: Moderate night vision</p>
+                <p>Below 50: Poor night vision - consult an eye care professional</p>
+            </div>
+            
+            <div class="disclaimer">
+                <p><strong>Note:</strong> This is a screening test and not a substitute for a professional eye exam.</p>
+            </div>
+
+            <button class="btn" onclick="resetTest()">
+                <i class="fas fa-redo"></i>
+                Test Again
+            </button>
+        </div>
+
+        <div id="adaptationOverlay" class="adaptation-overlay">
+            <div id="countdown" class="countdown"></div>
+        </div>
+
+
+        <div class="results" id="resultsArea">
+            <h2>Test Results</h2>
+            <div class="score">Night Vision Score: <span id="finalScore">0</span>%</div>
+            
+            <div class="interpretation">
+                <p><strong>Score Interpretation:</strong></p>
+                <p>90-100%: Excellent night vision adaptation</p>
+                <p>70-89%: Good night vision adaptation</p>
+                <p>50-69%: Moderate night vision adaptation</p>
+                <p>Below 50%: Poor night vision adaptation - consider consulting an eye care professional</p>
+            </div>
+            
+            <div class="disclaimer">
+                <p><strong>Note:</strong> This is a screening test and not a substitute for a professional eye exam. Please consult an eye care professional for a comprehensive evaluation.</p>
+            </div>
+
+            <button class="btn" onclick="resetTest()">Test Again</button>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let timeRemaining = 60;
+        let testInterval = null;
+        let adaptInterval = null;
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function startAdaptation() {
+            if (adaptInterval) clearInterval(adaptInterval);
+            const overlay = document.getElementById('adaptationOverlay');
+            const countdown = document.getElementById('countdown');
+            overlay.style.display = 'flex';
+            countdown.style.display = 'block';
+            
+            let count = 5;
+            countdown.textContent = count;
+            
+            adaptInterval = setInterval(() => {
+                count--;
+                countdown.textContent = count;
+                
+                if (count === 0) {
+                    clearInterval(adaptInterval);
+                    adaptInterval = null;
+                    overlay.style.display = 'none';
+                    countdown.style.display = 'none';
+                    startActualTest();
+                }
+            }, 1000);
+        }
+
+        function startTest() {
+            document.getElementById('setupContainer').style.display = 'none';
+            document.getElementById('testArea').style.display = 'block';
+            document.getElementById('resultsArea').style.display = 'none';
+            startAdaptation();
+        }
+
+        function startActualTest() {
+            if (testInterval) clearInterval(testInterval);
+            score = 0;
+            timeRemaining = 60;
+            updateScore();
+            createTarget();
+            
+            testInterval = setInterval(() => {
+                timeRemaining--;
+                document.getElementById('timeRemaining').textContent = timeRemaining;
+                
+                if (timeRemaining === 0) {
+                    clearInterval(testInterval);
+                    testInterval = null;
+                    showResults();
+                }
+            }, 1000);
+        }
+
+        function createTarget() {
+            const scene = document.getElementById('nightScene');
+            const target = document.createElement('div');
+            target.className = 'target';
+            
+            const padding = 40;
+            const x = Math.random() * (scene.offsetWidth - padding);
+            const y = Math.random() * (scene.offsetHeight - padding);
+            
+            target.style.left = x + 'px';
+            target.style.top = y + 'px';
+            
+            target.addEventListener('click', () => {
+                score += 10;
+                updateScore();
+                scene.removeChild(target);
+                createTarget();
+            });
+            
+            scene.appendChild(target);
+            requestAnimationFrame(() => target.classList.add('visible'));
+        }
+
+        function updateScore() {
+            document.getElementById('currentScore').textContent = score;
+        }
+
+        function showResults() {
+            document.getElementById('testArea').style.display = 'none';
+            document.getElementById('resultsArea').style.display = 'block';
+            document.getElementById('finalScore').textContent = score;
+        }
+
+        function resetTest() {
+            if (testInterval) clearInterval(testInterval);
+            if (adaptInterval) clearInterval(adaptInterval);
+            testInterval = null;
+            adaptInterval = null;
+            score = 0;
+            timeRemaining = 60;
+            document.getElementById('setupContainer').style.display = 'block';
+            document.getElementById('testArea').style.display = 'none';
+            document.getElementById('resultsArea').style.display = 'none';
+            document.getElementById('nightScene').innerHTML = '';
+        }
+
+        // Brightness control with validation
+        document.getElementById('brightnessSlider').addEventListener('input', (e) => {
+            const brightness = Math.max(10, Math.min(100, parseInt(e.target.value)));
+            document.getElementById('nightScene').style.filter = `brightness(${brightness}%)`;
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('unload', () => {
+            if (testInterval) clearInterval(testInterval);
+            if (adaptInterval) clearInterval(adaptInterval);
+        });
+    </script>
+</body>
+</html>

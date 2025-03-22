@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EyeShield - AI Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+                        --primary-red: #e40046;
+                        --black: #000000;
+                        --white: #ffffff;
+                        --background-rgb: 255, 255, 255;
+                    }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            border-radius: 25px;
+            color: var(--black);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .back-button:hover {
+            background: var(--primary-red);
+            transform: translateX(-5px);
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin: 4rem 0 2rem;
+        }
+
+        .welcome-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .highlight {
+            color: var(--primary-red);
+            font-weight: 700;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background: var(--white);
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--primary-red);
+        }
+
+        .welcome-text {
+            margin-bottom: 2.5rem;
+        }
+
+        .welcome-text h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: var(--primary-red);
+        }
+
+        .welcome-text p {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid var(--primary-red);
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature h4 {
+            color: var(--primary-red);
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .feature p {
+            color: var(--black);
+            font-size: 1rem;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .chat-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--primary-red);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.125rem;
+            font-weight: 500;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.3);
+        }
+
+        .chat-button svg {
+            margin-right: 0.75rem;
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 1rem;
+            }
+
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+            }
+
+            .welcome-section {
+                margin: 5rem 0 2rem;
+            }
+
+            .welcome-section h2 {
+                font-size: 2rem;
+            }
+
+            .chat-container {
+                padding: 1.5rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <a href="index.html" class="back-button">
+            <svg style="margin-right: 8px;" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back to Home
+        </a>
+        
+        <main>
+            <section class="welcome-section">
+                <h2><span class="highlight">AI Chat Assistant</span></h2>
+                <p>Your personal guide to better eye health and vision care</p>
+            </section>
+
+            <div class="chat-container">
+                <div class="welcome-text">
+                    <h3>Chat with OpenAI's ChatGPT</h3>
+                    <p>Get instant, expert advice on eye health, vision exercises, and personalized care recommendations</p>
+                </div>
+
+                <div class="features">
+                    <div class="feature">
+                        <h4>Expert Guidance</h4>
+                        <p>Access professional insights on eye care and vision health</p>
+                    </div>
+                    <div class="feature">
+                        <h4>24/7 Availability</h4>
+                        <p>Get answers to your questions anytime, anywhere</p>
+                    </div>
+                    <div class="feature">
+                        <h4>Personalized Advice</h4>
+                        <p>Receive tailored recommendations for your specific needs</p>
+                    </div>
+                </div>
+
+                <a href="https://chat.openai.com" target="_blank" class="chat-button">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                    </svg>
+                    Start Chatting with AI
+                </a>
+            </div>
+        </main>
+
+        <footer>
+            <p style="color: var(--black);">&copy; 2025 EyeShield. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

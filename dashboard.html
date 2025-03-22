@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eye Care Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js"></script>
+    
+    <!-- Your Firebase Config -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <style>
+        :root {
+            --primary-color: #E40046;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        .nav-link {
+            color: #333;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .stat-card {
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .chart-container {
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar py-3">
+                <div class="d-flex flex-column">
+                    <h4 class="mb-4 text-center">Eye Care Admin</h4>
+                    <a href="#" class="nav-link active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                    <a href="#" class="nav-link" data-section="content">
+                        <i class="fas fa-edit me-2"></i> Content Manager
+                    </a>
+                    <a href="#" class="nav-link" data-section="users">
+                        <i class="fas fa-users me-2"></i> Users
+                    </a>
+                    <a href="#" class="nav-link" data-section="tests">
+                        <i class="fas fa-eye me-2"></i> Test Results
+                    </a>
+                    <a href="#" class="nav-link" data-section="exercises">
+                        <i class="fas fa-dumbbell me-2"></i> Exercises
+                    </a>
+                    <a href="#" class="nav-link" data-section="settings">
+                        <i class="fas fa-cog me-2"></i> Settings
+                    </a>
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 py-3">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="section active">
+                    <h2 class="mb-4">Dashboard Overview</h2>
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-primary text-white">
+                                <div class="card-body">
+                                    <h5>Total Users</h5>
+                                    <h3 id="totalUsers">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-success text-white">
+                                <div class="card-body">
+                                    <h5>Tests Today</h5>
+                                    <h3 id="testsToday">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-warning text-white">
+                                <div class="card-body">
+                                    <h5>Active Users</h5>
+                                    <h3 id="activeUsers">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-info text-white">
+                                <div class="card-body">
+                                    <h5>Total Tests</h5>
+                                    <h3 id="totalTests">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">Test Distribution</h5>
+                                    <div class="chart-container">
+                                        <canvas id="testDistribution"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">User Activity</h5>
+                                    <div class="chart-container">
+                                        <canvas id="userActivity"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Manager Section -->
+                <div id="content-section" class="section d-none">
+                    <h2 class="mb-4">Content Manager</h2>
+                    
+                    <!-- Page Navigation -->
+                    <ul class="nav nav-pills mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="pill" href="#home-content">Home Page</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="pill" href="#vision-tests">Vision Tests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="pill" href="#exercises-content">Eye Exercises</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <!-- Home Page Content -->
+                        <div class="tab-pane fade show active" id="home-content">
+                            <!-- Hero Section Editor -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Hero Section</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="heroForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="heroTitle" name="title">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Subtitle</label>
+                                            <input type="text" class="form-control" id="heroSubtitle" name="subtitle">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <textarea class="form-control" id="heroDescription" name="description" rows="3"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Background Image</label>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img id="heroImagePreview" src="" alt="" class="img-thumbnail" style="max-width: 200px; display: none;">
+                                                <div>
+                                                    <input type="file" class="form-control" id="heroImage" name="image" accept="image/*">
+                                                    <small class="text-muted">Recommended size: 1920x1080px</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save Hero Section</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- About Section Editor -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">About Section</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="aboutForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="aboutTitle" name="title">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Content</label>
+                                            <textarea class="form-control" id="aboutContent" name="content" rows="5"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Image</label>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img id="aboutImagePreview" src="" alt="" class="img-thumbnail" style="max-width: 200px; display: none;">
+                                                <div>
+                                                    <input type="file" class="form-control" id="aboutImage" name="image" accept="image/*">
+                                                    <small class="text-muted">Recommended size: 800x600px</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save About Section</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Features Section Editor -->
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Features</h5>
+                                    <button class="btn btn-sm btn-primary" id="addFeature">Add Feature</button>
+                                </div>
+                                <div class="card-body">
+                                    <div id="featuresContainer">
+                                        <!-- Features will be dynamically added here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vision Tests Content -->
+                        <div class="tab-pane fade" id="vision-tests">
+                            <!-- Visual Acuity Test -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Visual Acuity Test</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="visualAcuityForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Test Title</label>
+                                            <input type="text" class="form-control" id="acuityTitle" name="title">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Instructions</label>
+                                            <textarea class="form-control" id="acuityInstructions" name="instructions" rows="3"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Test Characters</label>
+                                            <input type="text" class="form-control" id="acuityChars" name="characters" placeholder="E, F, L, O, P, T, Z">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save Visual Acuity Test</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Color Vision Test -->
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Color Vision Test</h5>
+                                    <button class="btn btn-sm btn-primary" id="addColorPlate">Add Color Plate</button>
+                                </div>
+                                <div class="card-body">
+                                    <form id="colorVisionForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Test Title</label>
+                                            <input type="text" class="form-control" id="colorTitle" name="title">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Instructions</label>
+                                            <textarea class="form-control" id="colorInstructions" name="instructions" rows="3"></textarea>
+                                        </div>
+                                        <div id="colorPlatesContainer">
+                                            <!-- Color plates will be added here -->
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-3">Save Color Vision Test</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Astigmatism Test -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Astigmatism Test</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="astigmatismForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Test Title</label>
+                                            <input type="text" class="form-control" id="astigmatismTitle" name="title">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Instructions</label>
+                                            <textarea class="form-control" id="astigmatismInstructions" name="instructions" rows="3"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Test Image</label>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img id="astigmatismImagePreview" src="" alt="" class="img-thumbnail" style="max-width: 200px; display: none;">
+                                                <div>
+                                                    <input type="file" class="form-control" id="astigmatismImage" name="image" accept="image/*">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save Astigmatism Test</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Eye Exercises Content -->
+                        <div class="tab-pane fade" id="exercises-content">
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Eye Exercises</h5>
+                                    <button class="btn btn-sm btn-primary" id="addExercise">Add Exercise</button>
+                                </div>
+                                <div class="card-body">
+                                    <div id="exercisesContainer">
+                                        <!-- Exercises will be dynamically added here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Section -->
+                <div id="users-section" class="section d-none">
+                    <h2 class="mb-4">User Management</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table" id="usersTable">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Last Test</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercises Section -->
+                <div id="exercises-section" class="section d-none">
+                    <h2 class="mb-4">Exercise Management</h2>
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Exercises</h5>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExerciseModal">
+                                Add Exercise
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table" id="exercisesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Duration</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Exercises will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tests Section -->
+                <div id="tests-section" class="section d-none">
+                    <h2 class="mb-4">Test Results</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table" id="testsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Test ID</th>
+                                            <th>User</th>
+                                            <th>Test Type</th>
+                                            <th>Date</th>
+                                            <th>Result</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div id="settings-section" class="section d-none">
+                    <h2 class="mb-4">System Settings</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="settingsForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Site Title</label>
+                                    <input type="text" class="form-control" id="siteTitle">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email Notifications</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="emailNotifications">
+                                        <label class="form-check-label">Enable email notifications</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Data Retention (days)</label>
+                                    <input type="number" class="form-control" id="dataRetention">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="js/content-manager.js"></script>
+</body>
+</html>

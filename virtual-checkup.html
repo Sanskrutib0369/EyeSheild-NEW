@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Eye Checkup - EyeShield</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Federo&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Revalia&family=Roboto+Slab:wght@100..900&family=Smythe&family=Tektur:wght@400..900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #E40046;
+            --black: #000000;
+            --white: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --card-border: rgba(228, 0, 70, 0.1);
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            line-height: 1.6;
+            background-image:
+                radial-gradient(circle at 100% 0%, rgba(228, 0, 70, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(228, 0, 70, 0.15) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(228, 0, 70, 0.1);
+        }
+
+        .home-icon {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+        }
+
+        .home-icon:hover {
+            color: var(--primary-red);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.15);
+            border-color: var(--primary-red);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 5rem;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary-red), transparent);
+            border-radius: 2px;
+        }
+
+        h1 {
+            color: var(--primary-red);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-family: "Tektur", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+            font-variation-settings:
+                "wdth" 100;
+        }
+
+        .description {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .tests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+            perspective: 1000px;
+        }
+
+        .test-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--white);
+            border: 1px solid var(--card-border);
+            box-shadow:
+                0 10px 30px var(--card-shadow),
+                inset 0 0 0 1px rgba(228, 0, 70, 0.05);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .test-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, center) var(--mouse-y, center), rgba(228, 0, 70, 0.15), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px) rotateX(2deg) rotateY(2deg);
+            box-shadow:
+                0 20px 40px rgba(228, 0, 70, 0.2),
+                inset 0 0 0 2px var(--primary-red);
+        }
+
+        .test-card:hover::before {
+            opacity: 1;
+        }
+
+        .test-icon {
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            margin-bottom: 1.5rem;
+            background: rgba(228, 0, 70, 0.1);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .test-card:hover .test-icon {
+            transform: scale(1.1);
+            background: var(--primary-red);
+            color: var(--white);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.3);
+        }
+
+        .test-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+            font-weight: 600;
+            transition: color 0.3s ease;
+            font-family: "Roboto Slab", serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal
+        }
+
+        .test-card:hover .test-title {
+            color: var(--primary-red);
+        }
+
+        .test-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            transition: color 0.3s ease;
+        }
+
+        .test-card:hover .test-description {
+            color: var(--white);
+        }
+
+        .test-time {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: rgba(228, 0, 70, 0.1);
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .test-card:hover .test-time {
+            background: var(--primary-red);
+            color: var(--white);
+        }
+
+        .disclaimer {
+            margin-top: 5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tests-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav>
+            <a href="index.html" class="home-icon" aria-label="Back to home">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </nav>
+
+        <header>
+            <h1>Virtual Eye Checkup</h1>
+            <p class="description">
+                Experience comprehensive eye testing from the comfort of your home. Our virtual tests help you monitor
+                your eye health and identify potential vision issues. Remember, these tests are for screening purposes
+                and do not replace professional eye examinations.
+            </p>
+        </header>
+
+        <div class="tests-grid">
+            <a href="visual-acuity.html" class="test-card">
+                <div class="test-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h2 class="test-title">Visual Acuity Test</h2>
+                <p class="test-description">
+                    Measure your vision sharpness with our digital Snellen chart. Test how well you can see at different
+                    distances.
+                </p>
+                <p class="test-time">Duration: 5-7 minutes</p>
+            </a>
+
+            <a href="color-vision.html" class="test-card">
+                <div class="test-icon">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <h2 class="test-title">Color Vision Test</h2>
+                <p class="test-description">
+                    Check your color perception with our Ishihara-inspired plates. Identify potential color vision
+                    deficiencies.
+                </p>
+                <p class="test-time">Duration: 3-5 minutes</p>
+            </a>
+
+            <a href="astigmatism.html" class="test-card">
+                <div class="test-icon">
+                    <i class="fas fa-asterisk"></i>
+                </div>
+                <h2 class="test-title">Astigmatism Test</h2>
+                <p class="test-description">
+                    Detect potential astigmatism using our radial pattern test. Check if some lines appear darker or
+                    blurrier than others.
+                </p>
+                <p class="test-time">Duration: 4-6 minutes</p>
+            </a>
+
+            <a href="contrast.html" class="test-card">
+                <div class="test-icon">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <h2 class="test-title">Contrast Sensitivity</h2>
+                <p class="test-description">
+                    Evaluate how well you can distinguish between different levels of contrast in your vision.
+                </p>
+                <p class="test-time">Duration: 5-7 minutes</p>
+            </a>
+
+            <a href="night-vision.html" class="test-card">
+                <div class="test-icon">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <h2 class="test-title">Night Vision Test</h2>
+                <p class="test-description">
+                    Assess your vision adaptation in low-light conditions and test your ability to see in darker
+                    environments.
+                </p>
+                <p class="test-time">Duration: 6-8 minutes</p>
+            </a>
+
+            <a href="near-vision.html" class="test-card">
+                <div class="test-icon">
+                    <i class="fas fa-book-reader"></i>
+                </div>
+                <h2 class="test-title">Near Vision Test</h2>
+                <p class="test-description">
+                    Check your reading vision with our digital Jaeger chart. Test your ability to read text at different
+                    sizes.
+                </p>
+                <p class="test-time">Duration: 4-6 minutes</p>
+            </a>
+        </div>
+
+        <div class="disclaimer">
+            <p><strong>Important:</strong> These online vision tests are for screening purposes only and are not a
+                substitute for a comprehensive eye examination by a qualified eye care professional. If you experience
+                any vision problems or discomfort, please consult an optometrist or ophthalmologist.</p>
+        </div>
+    </div>
+
+    <script>
+        // Add 3D card effect on hover
+        document.querySelectorAll('.test-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                // Update CSS variables for gradient effect
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+
+                // Calculate rotation
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+
+                card.style.transform = `
+                    perspective(1000px)
+                    rotateX(${rotateX}deg)
+                    rotateY(${rotateY}deg)
+                    translateY(-5px)
+                `;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
+        // Add smooth scroll for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add entrance animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.test-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+
+</html>

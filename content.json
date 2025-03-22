@@ -1,0 +1,21 @@
+{
+    "hero": {
+        "title": "EyeShield",
+        "subtitle": "Protect Your Vision",
+        "description": "Take care of your eyes with our comprehensive eye care solutions"
+    },
+    "about": {
+        "title": "About Us",
+        "content": "We provide innovative solutions for eye care and vision improvement"
+    },
+    "features": [
+        {
+            "title": "Eye Exercises",
+            "description": "Improve your eye health with targeted exercises"
+        },
+        {
+            "title": "Vision Tests",
+            "description": "Check your vision with our comprehensive tests"
+        }
+    ]
+}

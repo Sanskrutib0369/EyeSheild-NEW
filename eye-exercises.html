@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eye Exercises - Vision Care</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Tektur:wght@400..900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+                --primary-red: #e40046;
+                --black: #000000;
+                --white: #ffffff;
+                --background-rgb: 255, 255, 255;
+            }
+
+        :root[data-theme="dark"] {
+            --background: #000000;
+            --text: #FFFFFF;
+            --card-bg: #1a1a1a;
+            --border: #333333;
+            --background-rgb: 0, 0, 0;
+        }
+
+        :root[data-theme="light"] {
+            --background: #FFFFFF;
+            --text: #000000;
+            --card-bg: #FFFFFF;
+            --border: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .header-content {
+            margin-top: 3rem;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(var(--background-rgb), 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn {
+            position: relative;
+            top: 0;
+            left: 0;
+            background: var(--primary-red);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            margin: 0;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.3);
+        }
+
+        .theme-toggle {
+            position: relative;
+            top: 0;
+            right: 0;
+            background: var(--primary-red);
+            color: var(--white);
+            border: none;
+            padding: 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            margin: 0;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.3);
+        }
+
+        h1 {
+            color: var(--primary-red);
+            margin-bottom: 1rem;
+            font-size: 3rem;
+            font-family: "Tektur", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, background-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .exercise-title {
+            color: var(--primary-red);
+            margin-bottom: 1rem;
+            font-family: "EB Garamond", serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        .timer {
+            font-size: 2rem;
+            margin: 1rem 0;
+            color: var(--primary-red);
+        }
+
+        .btn {
+            background: var(--primary-red);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            font-family: "EB Garamond", serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            margin-top: 0;
+        }
+
+        .btn.stop {
+            background: #666;
+        }
+
+        .btn.stop:hover {
+            background: #888;
+        }
+
+        .animation-area {
+            width: 200px;
+            height: 200px;
+            margin: 1rem auto;
+            position: relative;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--background);
+        }
+
+        .dot {
+            width: 20px;
+            height: 20px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+        }
+
+        .hand-emoji {
+            font-size: 3.5rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.5s;
+            display: block;
+            transform-origin: top;
+        }
+
+        .hand-emoji.active {
+            animation: hangAndWave 2s infinite;
+            top: 20%;
+        }
+
+        .eight-path {
+            animation: eightPath 4s infinite;
+        }
+
+        .roll-path {
+            animation: rollPath 4s infinite;
+        }
+
+        .focus-target {
+            width: 20px;
+            height: 20px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            animation: none;
+        }
+
+        .focus-target.pulse {
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+
+        .focus-target.near {
+            transform: scale(0.5);
+        }
+
+        .focus-target.far {
+            transform: scale(1);
+        }
+
+        .blink-text {
+            font-size: 3rem;
+            color: var(--primary-red);
+            opacity: 1;
+            transition: opacity 0.3s;
+            display: none;
+        }
+
+        .eye-emoji {
+            font-size: 4rem;
+            transition: all 0.15s ease;
+        }
+
+        .eye-emoji.blink {
+            transform: scaleY(0.1);
+        }
+
+        .butterfly {
+            font-size: 2rem;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transform-origin: center;
+        }
+
+        p {
+            font-family: "Nunito", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        .butterfly.active {
+            animation: butterflyFlight 8s infinite ease-in-out, butterflyFlap 0.3s infinite ease-in-out;
+        }
+
+        @keyframes eightPath {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg) translate(50px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg) translate(50px) rotate(-360deg);
+            }
+        }
+
+        @keyframes rollPath {
+            0% {
+                transform: translate(-50%, -50%) translate(0, -50px);
+            }
+
+            25% {
+                transform: translate(-50%, -50%) translate(50px, 0);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) translate(0, 50px);
+            }
+
+            75% {
+                transform: translate(-50%, -50%) translate(-50px, 0);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) translate(0, -50px);
+            }
+        }
+
+        @keyframes hangAndWave {
+            0% {
+                transform: translate(-50%, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(-50%, 0) rotate(-10deg);
+            }
+
+            75% {
+                transform: translate(-50%, 0) rotate(10deg);
+            }
+
+            100% {
+                transform: translate(-50%, 0) rotate(0deg);
+            }
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-15deg);
+            }
+
+            75% {
+                transform: rotate(15deg);
+            }
+        }
+
+        @keyframes butterflyFly {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(-50%, -50%) rotate(-30deg);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) rotate(30deg);
+            }
+
+            75% {
+                transform: translate(-50%, -50%) rotate(-15deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+        }
+
+        @keyframes butterflyFlight {
+            0% {
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            25% {
+                left: 20%;
+                top: 20%;
+                transform: translate(-50%, -50%) rotate(-30deg);
+            }
+
+            50% {
+                left: 80%;
+                top: 30%;
+                transform: translate(-50%, -50%) rotate(30deg);
+            }
+
+            75% {
+                left: 30%;
+                top: 70%;
+                transform: translate(-50%, -50%) rotate(-15deg);
+            }
+
+            100% {
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+        }
+
+        @keyframes butterflyFlap {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scaleX(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scaleX(0.8);
+            }
+        }
+
+        @keyframes pulseDot {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            header {
+                padding: 1rem;
+            }
+
+            .back-btn {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin: 0;
+            }
+
+            .theme-toggle {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 0;
+            }
+
+            .nav-buttons {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: var(--background);
+                padding: 0.8rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                z-index: 1000;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .header-content {
+                margin-top: 5rem;
+            }
+
+            .exercise-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0.5rem;
+            }
+
+            .exercise-card {
+                min-height: auto;
+                padding: 1rem;
+            }
+
+            .animation-area {
+                width: 150px;
+                height: 150px;
+            }
+
+            .eye-emoji {
+                font-size: 3rem;
+            }
+
+            .butterfly {
+                font-size: 2.5rem;
+            }
+
+            .exercise-title {
+                font-size: 1.2rem;
+            }
+
+            .instructions p {
+                font-size: 0.9rem;
+            }
+
+            .timer {
+                font-size: 1.5rem;
+            }
+
+            .btn-group {
+                gap: 0.5rem;
+            }
+
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .animation-area {
+                width: 120px;
+                height: 120px;
+            }
+
+            .eye-emoji {
+                font-size: 2.5rem;
+            }
+
+            .butterfly {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="nav-buttons">
+                <a href="index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </a>
+                <button class="theme-toggle" id="themeToggle">
+                    🌓
+                </button>
+            </div>
+            <div class="header-content">
+                <h1>Eye Exercises</h1>
+                <p>Follow these exercises to help reduce eye strain and improve eye health</p>
+            </div>
+        </header>
+
+        <div class="exercise-grid">
+            <div class="exercise-card">
+                <h2 class="exercise-title">Palming Exercise</h2>
+                <div class="animation-area">
+                    <div class="hand-emoji" id="palmingEmoji">🤲</div>
+                </div>
+                <div class="instructions">
+                    <p>1. Rub your hands together to warm them.</p><br>
+                    <p>2. Cup your palms over your closed eyes.</p>
+                </div>
+                <div class="timer" id="palmingTimer">1:00</div>
+                <div class="btn-group">
+                    <button class="btn" id="palmingBtn" onclick="startExercise('palming')">Start Exercise</button>
+                    <button class="btn stop" id="palmingStopBtn" onclick="stopExercise('palming')"
+                        disabled>Stop</button>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <h2 class="exercise-title">Eye Rolling Exercise</h2>
+                <div class="animation-area">
+                    <div class="dot" id="rollDot"></div>
+                </div>
+                <div class="instructions">
+                    <p>1. Follow the red dot with your eyes, moving them smoothly in all directions.</p><br>
+                    <p>2. Keep your head still.</p>
+                </div>
+                <div class="timer" id="rollingTimer">01:00</div>
+                <div class="btn-group">
+                    <button class="btn" id="rollingBtn" onclick="startExercise('rolling')">Start Exercise</button>
+                    <button class="btn stop" id="rollingStopBtn" onclick="stopExercise('rolling')"
+                        disabled>Stop</button>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <h2 class="exercise-title">Figure Eight Exercise</h2>
+                <div class="animation-area">
+                    <div class="dot" id="eightDot"></div>
+                </div>
+                <div class="instructions">
+                    <p>1. Follow the red dot in a figure-8 pattern.</p><br>
+                    <p>2. Keep your head still.</p>
+                </div>
+                <div class="timer" id="eightTimer">01:00</div>
+                <div class="btn-group">
+                    <button class="btn" id="eightBtn" onclick="startExercise('eight')">Start Exercise</button>
+                    <button class="btn stop" id="eightStopBtn" onclick="stopExercise('eight')" disabled>Stop</button>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <h2 class="exercise-title">Focusing Exercise</h2>
+                <div class="animation-area">
+                    <div class="focus-target" id="focusTarget"></div>
+                </div>
+                <div class="instructions">
+                    <p>1. Focus on the dot as it moves near and far.</p><br>
+                    <p>2. This helps improve eye focusing ability.</p>
+                </div>
+                <div class="timer" id="focusTimer">01:00</div>
+                <div class="btn-group">
+                    <button class="btn" id="focusBtn" onclick="startExercise('focus')">Start Exercise</button>
+                    <button class="btn stop" id="focusStopBtn" onclick="stopExercise('focus')" disabled>Stop</button>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <h2 class="exercise-title">Butterfly Exercise</h2>
+                <div class="animation-area">
+                    <div class="butterfly" id="butterfly">🦋</div>
+                </div>
+                <div class="instructions">
+                    <p>1. Follow the butterfly's flight patterns.</p><br>
+                    <p>2. Notice how it flaps its wings while flying!</p>
+                </div>
+                <div class="timer" id="butterflyTimer">01:00</div>
+                <div class="btn-group">
+                    <button class="btn" id="butterflyBtn" onclick="startExercise('butterfly')">Start Exercise</button>
+                    <button class="btn stop" id="butterflyStopBtn" onclick="stopExercise('butterfly')"
+                        disabled>Stop</button>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <h2 class="exercise-title">Blinking Exercise</h2>
+                <div class="animation-area">
+                    <div class="eye-emoji" id="blinkEmoji">👁️</div>
+                    <!-- <div class="blink-text" id="blinkText">BLINK NOW!</div> -->
+                </div>
+                <div class="instructions">
+                    <p>1. Blink when the eye blinks.</p><br>
+                    <p>2. Match the rhythm to prevent eye strain.</p>
+                </div>
+                <div class="timer" id="blinkTimer">01:00</div>
+                <div class="btn-group">
+                    <button class="btn" id="blinkBtn" onclick="startExercise('blink')">Start Exercise</button>
+                    <button class="btn stop" id="blinkStopBtn" onclick="stopExercise('blink')" disabled>Stop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        const exercises = {
+            palming: {
+                duration: 60,
+                timer: document.getElementById('palmingTimer'),
+                button: document.getElementById('palmingBtn'),
+                stopButton: document.getElementById('palmingStopBtn'),
+                dot: null,
+                emoji: document.getElementById('palmingEmoji')
+            },
+            rolling: {
+                duration: 60,
+                timer: document.getElementById('rollingTimer'),
+                button: document.getElementById('rollingBtn'),
+                stopButton: document.getElementById('rollingStopBtn'),
+                dot: document.getElementById('rollDot')
+            },
+            eight: {
+                duration: 60,
+                timer: document.getElementById('eightTimer'),
+                button: document.getElementById('eightBtn'),
+                stopButton: document.getElementById('eightStopBtn'),
+                dot: document.getElementById('eightDot')
+            },
+            focus: {
+                duration: 60,
+                timer: document.getElementById('focusTimer'),
+                button: document.getElementById('focusBtn'),
+                stopButton: document.getElementById('focusStopBtn'),
+                target: document.getElementById('focusTarget'),
+                interval: null
+            },
+            butterfly: {
+                duration: 60,
+                timer: document.getElementById('butterflyTimer'),
+                button: document.getElementById('butterflyBtn'),
+                stopButton: document.getElementById('butterflyStopBtn'),
+                butterfly: document.getElementById('butterfly')
+            },
+            blink: {
+                duration: 60,
+                timer: document.getElementById('blinkTimer'),
+                button: document.getElementById('blinkBtn'),
+                stopButton: document.getElementById('blinkStopBtn'),
+                text: document.getElementById('blinkText'),
+                emoji: document.getElementById('blinkEmoji'),
+                interval: null
+            }
+        };
+
+        let activeTimer = null;
+        let activeExercise = null;
+
+        function stopExercise(type) {
+            if (activeTimer) {
+                clearInterval(activeTimer);
+                const exercise = exercises[type];
+
+                if (exercise.dot) {
+                    exercise.dot.classList.remove('active', 'roll-path', 'eight-path');
+                }
+                if (type === 'palming') {
+                    exercise.emoji.classList.remove('active');
+                }
+                if (exercise.emoji && type === 'blink') {
+                    exercise.emoji.classList.remove('blink');
+                }
+                if (exercise.interval) {
+                    clearInterval(exercise.interval);
+                }
+                if (type === 'focus') {
+                    exercise.target.classList.remove('near', 'far', 'pulse');
+                }
+                if (type === 'butterfly') {
+                    exercise.butterfly.classList.remove('active');
+                }
+
+                exercise.button.disabled = false;
+                exercise.stopButton.disabled = true;
+                updateTimerDisplay(exercise.timer, exercise.duration);
+
+                activeTimer = null;
+                activeExercise = null;
+            }
+        }
+
+        function startExercise(type) {
+            if (activeTimer) {
+                stopExercise(activeExercise);
+            }
+
+            const exercise = exercises[type];
+            activeExercise = type;
+            let timeLeft = exercise.duration;
+
+            exercise.button.disabled = true;
+            exercise.stopButton.disabled = false;
+
+            if (exercise.dot) {
+                exercise.dot.classList.remove(type === 'rolling' ? 'roll-path' : 'eight-path');
+                exercise.dot.offsetHeight;
+                exercise.dot.classList.add('active', type === 'rolling' ? 'roll-path' : 'eight-path');
+            }
+
+            if (type === 'palming') {
+                exercise.emoji.classList.add('active');
+            }
+
+            if (type === 'focus') {
+                exercise.interval = setInterval(() => {
+                    exercise.target.classList.toggle('near');
+                    exercise.target.classList.toggle('far');
+                }, 2000);
+                exercise.target.classList.add('pulse');
+            }
+
+            if (type === 'butterfly') {
+                exercise.butterfly.classList.add('active');
+            }
+
+            if (type === 'blink') {
+                exercise.interval = setInterval(() => {
+                    exercise.emoji.classList.add('blink');
+                    setTimeout(() => {
+                        exercise.emoji.classList.remove('blink');
+                    }, 200);
+                }, 2000);
+            }
+
+            updateTimerDisplay(exercise.timer, timeLeft);
+
+            activeTimer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay(exercise.timer, timeLeft);
+
+                if (timeLeft <= 0) {
+                    stopExercise(type);
+                    alert(`${type.charAt(0).toUpperCase() + type.slice(1)} exercise completed!`);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay(element, seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            element.textContent = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+    </script>
+</body>
+
+</html>

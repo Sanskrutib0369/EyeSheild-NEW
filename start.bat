@@ -1,0 +1,6 @@
+@echo off
+echo Installing dependencies...
+call npm install
+echo Starting Eye Care Admin Panel...
+start http://localhost:3001/admin/login.html
+node server.js

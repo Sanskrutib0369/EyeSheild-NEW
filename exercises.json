@@ -1,0 +1,9 @@
+[
+    {
+        "id": "1",
+        "name": "20-20-20 Rule",
+        "description": "Every 20 minutes, look at something 20 feet away for 20 seconds",
+        "duration": 20,
+        "image": "exercise-1.jpg"
+    }
+]

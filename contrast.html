@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrast Sensitivity Test - EyeShield</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #E40046;
+            --black: #000000;
+            --white: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --card-border: rgba(228, 0, 70, 0.1);
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --gradient-start: rgba(228, 0, 70, 0.15);
+            --gradient-end: transparent;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 100% 0%, var(--gradient-start) 0%, var(--gradient-end) 50%),
+                radial-gradient(circle at 0% 100%, var(--gradient-start) 0%, var(--gradient-end) 50%);
+            background-attachment: fixed;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-red);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-red), transparent);
+        }
+
+        .setup-instructions {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            margin: 3rem auto;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            position: relative;
+            box-shadow: 
+                0 10px 30px var(--card-shadow),
+                inset 0 0 0 1px rgba(228, 0, 70, 0.05);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .setup-instructions::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-red), transparent);
+        }
+
+        .setup-instructions h2 {
+            color: var(--primary-red);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .setup-instructions ol {
+            text-align: left;
+            margin-left: 2rem;
+            margin-top: 1rem;
+        }
+
+        .setup-instructions li {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            padding-left: 0.5rem;
+        }
+
+        .setup-instructions li::marker {
+            color: var(--primary-red);
+            font-weight: bold;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary-red), #ff1a5c);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 
+                0 10px 20px rgba(228, 0, 70, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 30px rgba(228, 0, 70, 0.3),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover i {
+            transform: scale(1.1);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 15px rgba(228, 0, 70, 0.2);
+        }
+
+        .btn.outline {
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            box-shadow: none;
+        }
+
+        .contrast-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px var(--card-shadow);
+        }
+
+        .contrast-cell {
+            background: var(--white);
+            color: var(--black);
+            font-size: 3.5rem;
+            font-weight: bold;
+            padding: 2rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            min-height: 120px;
+            user-select: none;
+            transform: scale(1);
+            filter: blur(0);
+        }
+
+        .contrast-1 { opacity: 1; }
+        .contrast-2 { opacity: 0.9; }
+        .contrast-3 { opacity: 0.8; }
+        .contrast-4 { opacity: 0.7; }
+        .contrast-5 { opacity: 0.6; }
+        .contrast-6 { opacity: 0.5; }
+        .contrast-7 { opacity: 0.4; }
+        .contrast-8 { opacity: 0.3; }
+        .contrast-9 { opacity: 0.25; }
+        .contrast-10 { opacity: 0.2; }
+        .contrast-11 { opacity: 0.15; }
+        .contrast-12 { opacity: 0.12; }
+        .contrast-13 { opacity: 0.1; }
+        .contrast-14 { opacity: 0.08; }
+        .contrast-15 { opacity: 0.06; }
+        .contrast-16 { opacity: 0.05; }
+        .contrast-17 { opacity: 0.04; }
+        .contrast-18 { opacity: 0.03; }
+
+        /* Smooth transitions */
+        #setupContainer, #testArea, #resultsArea {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #setupContainer.visible,
+        #testArea.visible,
+        #resultsArea.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .answer-input {
+            margin: 2rem auto;
+            text-align: center;
+        }
+
+        .answer-input input {
+            background: var(--card-bg);
+            border: 2px solid var(--primary-red);
+            color: var(--white);
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            width: 200px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-right: 1rem;
+        }
+
+        .answer-input input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(228, 0, 70, 0.3);
+        }
+
+        #setupContainer, #testArea, #resultsArea {
+            display: none;
+        }
+
+        #setupContainer {
+            display: block;
+        }
+
+        #resultsArea {
+            display: none;
+        }
+
+        .btn.outline:hover {
+            background: rgba(228, 0, 70, 0.1);
+            box-shadow: 0 8px 20px rgba(228, 0, 70, 0.2);
+        }
+
+        .test-area {
+            display: none;
+            margin: 3rem auto;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 
+                0 10px 30px var(--card-shadow),
+                inset 0 0 0 1px rgba(228, 0, 70, 0.05);
+            backdrop-filter: blur(10px);
+            position: relative;
+            animation: fadeScale 0.5s ease-out;
+        }
+
+        @keyframes fadeScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .test-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-red);
+            border-radius: 15px 0 0 15px;
+        }
+
+        .letter-display {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(228, 0, 70, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .letter-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(228, 0, 70, 0.15);
+        }
+
+        .home-icon {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            padding: 0.75rem 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: fixed;
+            left: 2rem;
+            top: 2rem;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .home-icon i {
+            transition: transform 0.3s ease;
+        }
+
+        .home-icon span {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .home-icon:hover {
+            color: var(--primary-red);
+            border-color: var(--primary-red);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.2);
+        }
+
+        .home-icon:hover i {
+            transform: translateX(-5px);
+        }
+
+        .home-icon:hover span {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .option-btn:hover {
+            background: var(--primary-red);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(228, 0, 70, 0.3);
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--card-border);
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: var(--primary-red);
+        }
+
+        .back-button i {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .setup-instructions {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .home-icon {
+                left: 1rem;
+                top: 1rem;
+            }
+
+            .option-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                min-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="nav-bar">
+            <a href="virtual-checkup.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Checkup</span>
+            </a>
+        </nav>
+
+        <div id="setupContainer" class="setup-container">
+            <h1>Contrast Sensitivity Test</h1>
+            <div class="setup-instructions">
+                <h2>Test Instructions</h2>
+                <ol>
+                    <li>Position yourself at arm's length from the screen (approximately 60cm)</li>
+                    <li>You will be shown letters with varying contrast levels</li>
+                    <li>Each letter will become progressively harder to see</li>
+                    <li>Click the correct letter from the options provided</li>
+                    <li>If you're unsure, make your best guess</li>
+                    <li>Complete all sets to receive your results</li>
+                </ol>
+            </div>
+            <button class="btn" onclick="startTest()">Start Test</button>
+        </div>
+
+        <div id="testArea">
+            <div class="contrast-grid" id="contrastGrid"></div>
+
+            <div class="progress">
+                Row <span id="currentRow">1</span> of <span id="totalRows">6</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="answer-input">
+                <input type="text" id="answer" maxlength="3" placeholder="Type 3 letters here" autocomplete="off">
+                <button class="btn" onclick="submitAnswer()">
+                    <i class="fas fa-arrow-right"></i>
+                    Next
+                </button>
+            </div>
+        </div>
+
+        <div class="results" id="resultsArea">
+            <h2>Test Results</h2>
+            <div class="score">Contrast Sensitivity: <span id="finalScore">0</span>%</div>
+            
+            <div id="interpretation"></div>
+
+            <div class="interpretation">
+                <p><strong>Score Interpretation:</strong></p>
+                <p>85-100%: Exceptional contrast sensitivity</p>
+                <p>70-84%: Good contrast sensitivity</p>
+                <p>55-69%: Moderate contrast sensitivity</p>
+                <p>40-54%: Fair contrast sensitivity - consider eye exercises</p>
+                <p>Below 40%: Poor contrast sensitivity - consult an eye care professional</p>
+            </div>
+            
+            <div class="disclaimer">
+                <p><strong>Note:</strong> This is a screening test and not a substitute for a professional eye exam. Please consult an eye care professional for a comprehensive evaluation.</p>
+            </div>
+
+            <button class="btn" onclick="resetTest()">Test Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Test configuration
+        // All possible letters for the test
+        const possibleLetters = [
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K',
+            'N', 'P', 'R', 'S', 'T', 'U', 'V', 'X', 'Z'
+        ];
+
+        // Number of rows and letters per row
+        const totalRows = 6;
+        const lettersPerRow = 3;
+        let letters = [];
+
+        let currentRow = 0;
+        let score = 0;
+        let answers = [];
+
+        function createContrastRow(rowIndex) {
+            const grid = document.getElementById('contrastGrid');
+            grid.innerHTML = '';
+            
+            letters[rowIndex].forEach((letter, index) => {
+                const cell = document.createElement('div');
+                cell.className = `contrast-cell contrast-${rowIndex * 3 + index + 1}`;
+                cell.textContent = letter;
+                
+                // Add blur effect based on row index
+                const blurAmount = Math.min(rowIndex * 0.4, 2); // Max blur of 2px
+                cell.style.filter = `blur(${blurAmount}px)`;
+                
+                // Add slight random rotation for added difficulty
+                const rotation = (Math.random() - 0.5) * (rowIndex + 1) * 2; // Increases with each row
+                cell.style.transform = `rotate(${rotation}deg) scale(${1 - rowIndex * 0.02})`; // Slight size decrease
+                
+                grid.appendChild(cell);
+            });
+
+            // Focus on answer input
+            document.getElementById('answer').focus();
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Generate random letters for each row
+        function generateLetters() {
+            letters = [];
+            for (let i = 0; i < totalRows; i++) {
+                const rowLetters = [];
+                for (let j = 0; j < lettersPerRow; j++) {
+                    let letter;
+                    do {
+                        letter = possibleLetters[Math.floor(Math.random() * possibleLetters.length)];
+                    } while (rowLetters.includes(letter));
+                    rowLetters.push(letter);
+                }
+                letters.push(rowLetters);
+            }
+        }
+
+        function startTest() {
+            currentRow = 0;
+            score = 0;
+            answers = [];
+            generateLetters();
+            
+            // Hide setup container with animation
+            document.getElementById('setupContainer').classList.remove('visible');
+            setTimeout(() => {
+                document.getElementById('setupContainer').style.display = 'none';
+                document.getElementById('testArea').style.display = 'block';
+                document.getElementById('resultsArea').style.display = 'none';
+                
+                // Show test area with animation
+                setTimeout(() => {
+                    document.getElementById('testArea').classList.add('visible');
+                }, 50);
+                
+                document.getElementById('currentRow').textContent = '1';
+            document.getElementById('progressFill').style.width = '0';
+                document.getElementById('totalRows').textContent = totalRows;
+                createContrastRow(0);
+            }, 300);
+        }
+
+        function submitAnswer() {
+            const answerInput = document.getElementById('answer');
+            let answer = answerInput.value.toUpperCase().trim();
+            
+            // Validate input
+            if (answer.length !== 3) {
+                alert('Please enter exactly 3 letters');
+                answerInput.value = '';
+                answerInput.focus();
+                return;
+            }
+
+            if (!/^[A-Z]{3}$/.test(answer)) {
+                alert('Please enter only letters');
+                answerInput.value = '';
+                answerInput.focus();
+                return;
+            }
+            
+            answers.push(answer);
+            
+            // Calculate score for this row
+            let rowScore = 0;
+            for (let i = 0; i < 3; i++) {
+                if (answer[i] === letters[currentRow][i]) {
+                    rowScore++;
+                }
+            }
+            score += rowScore;
+
+            currentRow++;
+            document.getElementById('currentRow').textContent = currentRow + 1;
+            document.getElementById('progressFill').style.width = `${(currentRow / totalRows) * 100}%`;
+            answerInput.value = '';
+
+            if (currentRow < totalRows) {
+                createContrastRow(currentRow);
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            // Hide test area with animation
+            document.getElementById('testArea').classList.remove('visible');
+            setTimeout(() => {
+                document.getElementById('testArea').style.display = 'none';
+                document.getElementById('resultsArea').style.display = 'block';
+                
+                // Show results area with animation
+                setTimeout(() => {
+                    document.getElementById('resultsArea').classList.add('visible');
+                }, 50);
+                
+                // Calculate final score as percentage
+                const maxScore = totalRows * lettersPerRow;
+                const finalScore = Math.round((score / maxScore) * 100);
+                document.getElementById('finalScore').textContent = finalScore;
+                
+                // Add interpretation
+                const interpretation = document.getElementById('interpretation');
+                let message = '';
+                let color = '';
+                
+                if (finalScore >= 80) {
+                    message = 'Your contrast sensitivity is excellent!';
+                    color = '#4CAF50';
+                } else if (finalScore >= 60) {
+                    message = 'Your contrast sensitivity is good, but there might be room for improvement.';
+                    color = '#FFC107';
+                } else {
+                    message = 'Your contrast sensitivity might need attention. Consider consulting an eye care professional.';
+                    color = '#E40046';
+                }
+                
+                interpretation.innerHTML = `<p style="color: ${color}; font-size: 1.2rem; margin: 1rem 0;">${message}</p>`;
+            }, 300);
+        }
+
+        function resetTest() {
+            currentRow = 0;
+            score = 0;
+            answers = [];
+            document.getElementById('answer').value = '';
+            
+            // Hide results area with animation
+            document.getElementById('resultsArea').classList.remove('visible');
+            setTimeout(() => {
+                document.getElementById('resultsArea').style.display = 'none';
+                document.getElementById('setupContainer').style.display = 'block';
+                document.getElementById('testArea').style.display = 'none';
+                
+                // Show setup container with animation
+                setTimeout(() => {
+                    document.getElementById('setupContainer').classList.add('visible');
+                }, 50);
+            }, 300);
+        }
+
+        // Handle Enter key in answer input
+        document.getElementById('answer').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitAnswer();
+            }
+        });
+
+        // Initialize visibility
+        document.getElementById('setupContainer').classList.add('visible');
+        
+        // Force dark theme
+        document.documentElement.setAttribute('data-theme', 'dark');
+    </script>
+</body>
+</html>

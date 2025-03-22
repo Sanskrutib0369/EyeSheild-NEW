@@ -1,0 +1,11 @@
+{
+    "theme": {
+        "primary": "#E40046",
+        "background": "#FFFFFF",
+        "text": "#000000"
+    },
+    "timer": {
+        "exerciseDuration": 30,
+        "breakReminder": 20
+    }
+}
